@@ -5,6 +5,8 @@ const { buildSchema } = require('graphql');
 
 const app = express();
 
+const events = []; //temp solution until MONGODB set up
+
 app.use(bodyParser.json());
 
 app.get('/', (req, res, next) => {
@@ -16,12 +18,28 @@ app.use(
   graphqlHttp({
     //! means its not nullable - must return something even if empty.
     schema: buildSchema(`
+    
+        type Event {
+            _id: ID!
+            title: String!
+            description: String!
+            price: Float!
+            date: String!
+        }
+
+        input EventInput {
+            title: String!
+            description: String!
+            price: Float!
+            date: String!
+        }
+
         type RootQuery {
-            events: [String!]!
+            events: [Event!]!
         }
 
         type RootMutation {
-            createEvent(name: String): String
+            createEvent(input: EventInput): Event
         }
 
         schema {
@@ -31,11 +49,19 @@ app.use(
     `),
     rootValue: {
       events: () => {
-        return ['Birthday', 'Cooking', 'Sailing'];
+        return events;
       },
       createEvent: args => {
-        const eventName = args.name;
-        return eventName;
+        const newEvent = {
+          _id: Math.random().toString(),
+          title: args.input.title,
+          description: args.input.description,
+          price: args.input.price,
+          date: args.input.date
+        };
+
+        events.push(newEvent);
+        return newEvent;
       }
     },
     graphiql: true
