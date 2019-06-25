@@ -3,9 +3,10 @@ const bodyParser = require('body-parser');
 const graphqlHttp = require('express-graphql');
 const { buildSchema } = require('graphql');
 
-const app = express();
+const mongoose = require('mongoose');
+const Event = require('./models/event');
 
-const events = []; //temp solution until MONGODB set up
+const app = express();
 
 app.use(bodyParser.json());
 
@@ -49,23 +50,46 @@ app.use(
     `),
     rootValue: {
       events: () => {
-        return events;
+        return Event.find()
+          .then(events => {
+            return events;
+          })
+          .catch(err => {
+            throw err;
+          });
       },
       createEvent: args => {
-        const newEvent = {
-          _id: Math.random().toString(),
+        const newEvent = new Event({
           title: args.input.title,
           description: args.input.description,
           price: args.input.price,
           date: args.input.date
-        };
+        });
 
-        events.push(newEvent);
-        return newEvent;
+        return newEvent
+          .save()
+          .then(res => {
+            console.log(res);
+            return res;
+          })
+          .catch(err => {
+            throw err;
+          });
       }
     },
     graphiql: true
   })
 );
 
-app.listen(3000);
+mongoose
+  .connect(
+    `mongodb+srv://${process.env.MONGO_USER}:${
+      process.env.MONGO_PASSWORD
+    }@aj-dev-1-bpxcn.mongodb.net/${
+      process.env.MONGO_DB
+    }?retryWrites=true&w=majority`
+  )
+  .then(res => {
+    app.listen(3000);
+  })
+  .catch(err => console.log(err));
