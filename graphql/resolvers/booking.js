@@ -2,7 +2,11 @@ const Booking = require('../../models/booking');
 const { transformBooking, transformEvent } = require('./merge');
 
 module.exports = {
-  bookings: async () => {
+  bookings: async req => {
+    if (!req.isAuth) {
+      throw new Error('Unauthorized access');
+    }
+
     try {
       const bookings = await Booking.find();
       return bookings.map(booking => {
@@ -13,7 +17,11 @@ module.exports = {
     }
   },
 
-  bookEvent: async args => {
+  bookEvent: async (args, req) => {
+    if (!req.isAuth) {
+      throw new Error('Unauthorized access');
+    }
+
     try {
       const booking = new Booking({
         user: '5d122973c7aade26109516d4',
@@ -25,7 +33,11 @@ module.exports = {
       throw err;
     }
   },
-  cancelBooking: async args => {
+  cancelBooking: async (args, req) => {
+    if (!req.isAuth) {
+      throw new Error('Unauthorized access');
+    }
+
     try {
       const booking = await Booking.findById({ _id: args.bookingId }).populate(
         'event'

@@ -1,5 +1,6 @@
 const Event = require('../../models/event');
 const { transformEvent } = require('./merge');
+const User = require('../../models/user');
 
 module.exports = {
   events: () => {
@@ -14,20 +15,23 @@ module.exports = {
       });
   },
 
-  createEvent: args => {
+  createEvent: (args, req) => {
+    if (!req.isAuth) {
+      throw new Error('Unauthorized access');
+    }
     const newEvent = new Event({
       title: args.input.title,
       description: args.input.description,
       price: args.input.price,
       date: args.input.date,
-      creator: '5d122973c7aade26109516d4'
+      creator: req.userId
     });
     let createdEvent;
     return newEvent
       .save()
       .then(res => {
         createdEvent = transformEvent(res);
-        return User.findById('5d122973c7aade26109516d4');
+        return User.findById(req.userId);
       })
       .then(user => {
         user.createdEvents.push(newEvent);
