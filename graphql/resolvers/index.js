@@ -1,5 +1,6 @@
 const Event = require('../../models/event');
 const User = require('../../models/user');
+const Booking = require('../../models/booking');
 const bcrypt = require('bcryptjs');
 
 // async await is another syntax for promises. can be used instead of .then
@@ -18,12 +19,23 @@ const events = async eventIds => {
   }
 };
 
+const singleEvent = async eventId => {
+  try {
+    const event = await Event.findById(eventId);
+    console.log(event);
+    return event;
+  } catch (err) {
+    throw err;
+  }
+};
+
 const user = async userId => {
   try {
     const user = await User.findById(userId);
     return {
       ...user._doc,
-      createdEvents: events.bind(this, user._doc.createdEvents)
+      createdEvents: events.bind(this, user._doc.createdEvents),
+      password: null
     };
   } catch (err) {
     throw err;
@@ -46,6 +58,21 @@ module.exports = {
       .catch(err => {
         throw err;
       });
+  },
+  bookings: async () => {
+    try {
+      const bookings = await Booking.find();
+      return bookings.map(booking => ({
+        ...booking._doc,
+        user: user.bind(this, booking._doc.user),
+        event: singleEvent.bind(this, booking._doc.event),
+        _id: booking.id,
+        createdAt: new Date(booking.createdAt).toISOString(),
+        updatedAt: new Date(booking._doc.updatedAt).toISOString()
+      }));
+    } catch (err) {
+      throw err;
+    }
   },
   createEvent: args => {
     const newEvent = new Event({
@@ -108,5 +135,40 @@ module.exports = {
       .catch(err => {
         throw err;
       });
+  },
+  bookEvent: async args => {
+    try {
+      const booking = new Booking({
+        user: '5d122973c7aade26109516d4',
+        event: args.eventId
+      });
+      const result = await booking.save();
+      return {
+        ...result._doc,
+        user: user.bind(this, booking._doc.user),
+        event: singleEvent.bind(this, booking._doc.event),
+        createdAt: new Date(result.createdAt).toISOString(),
+        updatedAt: new Date(result._doc.updatedAt).toISOString()
+      };
+    } catch (err) {
+      throw err;
+    }
+  },
+  cancelBooking: async args => {
+    try {
+      const booking = await Booking.findById({ _id: args.bookingId }).populate(
+        'event'
+      );
+
+      const event = {
+        ...booking.event._doc,
+        _id: booking.event._doc.id,
+        creator: user.bind(this, booking.event._doc.creator)
+      };
+      await Booking.deleteOne({ _id: args.bookingId });
+      return event;
+    } catch (err) {
+      throw err;
+    }
   }
 };
