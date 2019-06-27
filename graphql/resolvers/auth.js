@@ -8,6 +8,7 @@ module.exports = {
     return User.findOne({ email: args.input.email })
       .then(user => {
         if (user) {
+          console.log(user);
           throw new Error('User exists already');
         }
         // bcrypt used to hash passwords into db. instead of saving as plain test
@@ -38,6 +39,9 @@ module.exports = {
 
   login: async ({ email, password }) => {
     const user = await User.findOne({ email: email });
+    console.log(email);
+
+    console.log(user);
     if (!user) {
       throw new Error('User does not exist');
     }
