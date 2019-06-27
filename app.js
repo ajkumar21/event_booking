@@ -11,6 +11,7 @@ const app = express();
 
 app.use(bodyParser.json());
 
+//authentication middleware added here
 app.use(isAuth);
 
 app.get('/', (req, res, next) => {
