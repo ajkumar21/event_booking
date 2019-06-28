@@ -129,6 +129,7 @@ class EventsPage extends Component {
   }
 
   render() {
+    // create list here before using in render function
     const eventList = this.state.events.map(event => {
       return (
         <li key={event._id} className='events__list-item'>
