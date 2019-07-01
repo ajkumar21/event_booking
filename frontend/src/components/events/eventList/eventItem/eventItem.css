@@ -1,0 +1,6 @@
+.events__list-item {
+  margin: 1rem 0;
+  padding: 1rem;
+  border: 1px solid #0269bd;
+  list-style: none;
+}

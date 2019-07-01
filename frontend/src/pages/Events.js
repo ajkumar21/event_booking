@@ -4,6 +4,7 @@ import './Events.css';
 import Backdrop from '../components/backdrop/backdrop';
 import Modal from '../components/modal/modal';
 import AuthContext from '../context/auth-context';
+import EventList from '../components/events/eventList/eventList';
 
 class EventsPage extends Component {
   state = {
@@ -129,14 +130,6 @@ class EventsPage extends Component {
   }
 
   render() {
-    // create list here before using in render function
-    const eventList = this.state.events.map(event => {
-      return (
-        <li key={event._id} className='events__list-item'>
-          {event.title}
-        </li>
-      );
-    });
     return (
       <React.Fragment>
         {this.state.creating && <Backdrop />}
@@ -181,9 +174,7 @@ class EventsPage extends Component {
           </div>
         )}
 
-        <section className='events__list'>
-          <ul>{eventList}</ul>
-        </section>
+        <EventList events={this.state.events} />
       </React.Fragment>
     );
   }
