@@ -16,6 +16,7 @@ module.exports = {
   },
 
   createEvent: (args, req) => {
+    console.log(req);
     if (!req.isAuth) {
       throw new Error('Unauthorized access');
     }
