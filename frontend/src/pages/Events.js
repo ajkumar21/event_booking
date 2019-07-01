@@ -9,7 +9,9 @@ import EventList from '../components/events/eventList/eventList';
 class EventsPage extends Component {
   state = {
     creating: false,
-    events: []
+    events: [],
+    isLoading: false,
+    selectedEvent: null
   };
 
   constructor(props) {
@@ -31,7 +33,7 @@ class EventsPage extends Component {
   static contextType = AuthContext;
 
   modalCancel = () => {
-    this.setState({ creating: false });
+    this.setState({ creating: false, selectedEvent: null });
   };
 
   modalConfirm = () => {
@@ -60,10 +62,6 @@ class EventsPage extends Component {
         description
         date
         price
-        creator{
-          _id
-          email
-        }
       }
     }`
     };
@@ -85,12 +83,26 @@ class EventsPage extends Component {
         return res.json();
       })
       .then(resData => {
-        this.fetchEvents();
+        this.setState(prevState => {
+          const updatedEvents = [...prevState.events];
+          updatedEvents.push({
+            _id: resData.data.createEvent._id,
+            title: resData.data.createEvent.title,
+            description: resData.data.createEvent.description,
+            date: resData.data.createEvent.date,
+            price: resData.data.createEvent.price,
+            creator: {
+              _id: this.context._id
+            }
+          });
+          return { events: updatedEvents };
+        });
       })
       .catch(err => console.log(err));
   };
 
   fetchEvents() {
+    this.setState({ isLoading: true });
     const requestBody = {
       query: `
       query {
@@ -124,10 +136,24 @@ class EventsPage extends Component {
       })
       .then(resData => {
         const events = resData.data.events;
-        this.setState({ events: events });
+        this.setState({ events: events, isLoading: false });
       })
-      .catch(err => console.log(err));
+      .catch(err => {
+        console.log(err);
+        this.setState({ isLoading: false });
+      });
   }
+
+  showDetailHandler = eventId => {
+    this.setState(prevState => {
+      const selectedEvent = prevState.events.find(e => e._id === eventId);
+      return { selectedEvent: selectedEvent };
+    });
+  };
+
+  bookEventHandler = () => {
+    return null;
+  };
 
   render() {
     return (
@@ -140,6 +166,7 @@ class EventsPage extends Component {
             canConfirm
             onCancel={this.modalCancel}
             onConfirm={this.modalConfirm}
+            confirmText='Confirm'
           >
             <form>
               <div className='form-control'>
@@ -165,6 +192,28 @@ class EventsPage extends Component {
             </form>
           </Modal>
         )}
+
+        {this.state.selectedEvent && <Backdrop />}
+        {this.state.selectedEvent && (
+          <Modal
+            title={this.state.selectedEvent.title}
+            canCancel
+            canConfirm
+            onCancel={this.modalCancel}
+            onConfirm={this.bookEventHandler}
+            confirmText='Book'
+          >
+            <h1>{this.state.selectedEvent.title}</h1>
+            <h2>{this.state.selectedEvent.price}</h2>
+            <h2>
+              {new Date(this.state.selectedEvent.date).toLocaleDateString(
+                'de-DE'
+              )}
+            </h2>
+            <h3>{this.state.selectedEvent.description}</h3>
+          </Modal>
+        )}
+
         {this.context.token && (
           <div className='events-control'>
             <p>Share your own events!</p>
@@ -173,8 +222,24 @@ class EventsPage extends Component {
             </button>
           </div>
         )}
+        {this.state.isLoading ? (
+          // https://loading.io/css
 
-        <EventList events={this.state.events} />
+          <div className='spinner'>
+            <div className='lds-ellipsis'>
+              <div />
+              <div />
+              <div />
+              <div />
+            </div>
+          </div>
+        ) : (
+          <EventList
+            events={this.state.events}
+            authUserId={this.context.userId}
+            onViewDetail={this.showDetailHandler}
+          />
+        )}
       </React.Fragment>
     );
   }

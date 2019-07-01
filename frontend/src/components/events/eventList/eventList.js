@@ -6,7 +6,17 @@ const eventList = props => {
   // create list here before using in render function
   const events = props.events.map(event => {
     return (
-      <EventItem key={event._id} eventId={event._id} title={event.title} />
+      <EventItem
+        authUserId={props.authUserId}
+        key={event._id}
+        eventId={event._id}
+        title={event.title}
+        creatorId={event.creator._id}
+        price={event.price}
+        date={event.date}
+        description={event.description}
+        onDetail={props.onViewDetail}
+      />
     );
   });
 
