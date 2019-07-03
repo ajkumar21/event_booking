@@ -48,6 +48,7 @@ type Booking {
 type RootQuery {
     events: [Event!]!
     bookings: [Booking!]!
+    users:[User!]!
     login(email:String!, password:String!): AuthData!
 }
 

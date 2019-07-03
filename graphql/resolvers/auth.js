@@ -3,12 +3,20 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
 module.exports = {
+  users: async (args, req) => {
+    try {
+      // check user - which is an objectId stored for each booking - against loggedIn user Id stored in req
+      const users = await User.find();
+      return users;
+    } catch (err) {
+      throw err;
+    }
+  },
   createUser: args => {
     //check if email already exists
     return User.findOne({ email: args.input.email })
       .then(user => {
         if (user) {
-          console.log(user);
           throw new Error('User exists already');
         }
         // bcrypt used to hash passwords into db. instead of saving as plain test
@@ -39,9 +47,6 @@ module.exports = {
 
   login: async ({ email, password }) => {
     const user = await User.findOne({ email: email });
-    console.log(email);
-
-    console.log(user);
     if (!user) {
       throw new Error('User does not exist');
     }

@@ -8,7 +8,8 @@ module.exports = {
     }
 
     try {
-      const bookings = await Booking.find();
+      // check user - which is an objectId stored for each booking - against loggedIn user Id stored in req
+      const bookings = await Booking.find({ user: req.userId });
       return bookings.map(booking => {
         return transformBooking(booking);
       });
@@ -24,7 +25,7 @@ module.exports = {
 
     try {
       const booking = new Booking({
-        user: '5d122973c7aade26109516d4',
+        user: req.userId,
         event: args.eventId
       });
       const result = await booking.save();
