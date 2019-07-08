@@ -60,17 +60,20 @@ class BookingsPage extends Component {
 
   onDelete = id => {
     this.setState({ isLoading: true });
-
+    // adding variables to queries
     const requestBody = {
       query: `
-          mutation {
-            cancelBooking(bookingId: "${id}") {
+          mutation CancelBooking($bookingid: ID!) {
+            cancelBooking(bookingId: $bookingid) {
               _id
               title
              }
             }
           
-        `
+        `,
+      variables: {
+        bookingid: id
+      }
     };
 
     fetch('http://localhost:8000/graphql', {

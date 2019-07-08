@@ -35,7 +35,7 @@ const user = async userId => {
     return {
       ...user._doc,
       _id: user.id,
-      createdEvents: eventLoader.load.bind(this, user._doc.createdEvents),
+      createdEvents: events.bind(this, user._doc.createdEvents),
       password: null
     };
   } catch (err) {
