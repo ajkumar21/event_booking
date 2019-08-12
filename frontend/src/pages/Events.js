@@ -10,7 +10,10 @@ import {
   Image,
   Menu,
   Segment,
-  Modal
+  Modal,
+  Label,
+  Input,
+  Form
 } from 'semantic-ui-react';
 
 class EventsPage extends Component {
@@ -18,7 +21,8 @@ class EventsPage extends Component {
     creating: false,
     events: [],
     isLoading: false,
-    selectedEvent: null
+    selectedEvent: null,
+    open: false
   };
 
   isActive = true;
@@ -42,17 +46,17 @@ class EventsPage extends Component {
   static contextType = AuthContext;
 
   modalCancel = () => {
-    this.setState({ creating: false, selectedEvent: null });
+    this.setState({ creating: false, selectedEvent: null, open: false });
   };
 
   modalConfirm = () => {
-    this.setState({ creating: false });
+    this.setState({ creating: false, open: false });
     const title = this.titleElReft.current.value;
     const price = +this.priceElReft.current.value;
     // adding + to variable name makes it a number
     const date = this.dateElReft.current.value;
     const description = this.descriptionElReft.current.value;
-
+    console.log(title + price + date + description);
     if (
       title.trim().length === 0 ||
       price <= 0 ||
@@ -214,7 +218,7 @@ class EventsPage extends Component {
     return (
       <Modal
         trigger={
-          <Button animated>
+          <Button animated onClick={() => this.setState({ open: true })}>
             <Button.Content visible>Add Event</Button.Content>
             <Button.Content hidden>
               <Icon name='add circle' />
@@ -223,37 +227,47 @@ class EventsPage extends Component {
         }
         basic
         size='small'
+        open={this.state.open}
       >
         <Header icon='archive' content='New Event' />
         <Modal.Content>
-          <form>
-            <div className='form-control'>
-              <label htmlFor='title'>Title</label>
-              <input type='text' id='title' ref={this.titleElReft} />
-            </div>
-            <div className='form-control'>
-              <label htmlFor='price'>Price</label>
+          <Form>
+            <Form.Field>
+              <label htmlFor='title' style={{ color: 'white' }}>
+                Title
+              </label>
+              <input ref={this.titleElReft} />
+            </Form.Field>
+            <Form.Field>
+              <label htmlFor='price' style={{ color: 'white' }}>
+                Price
+              </label>
               <input type='number' id='price' ref={this.priceElReft} />
-            </div>
-            <div className='form-control'>
-              <label htmlFor='date'>Date</label>
+            </Form.Field>
+
+            <Form.Field>
+              <label htmlFor='date' style={{ color: 'white' }}>
+                Date
+              </label>
               <input type='date' id='date' ref={this.dateElReft} />
-            </div>
-            <div className='form-control'>
-              <label htmlFor='description'>Description</label>
+            </Form.Field>
+            <Form.Field>
+              <label htmlFor='description' style={{ color: 'white' }}>
+                Description
+              </label>
               <textarea
                 rows='4'
                 id='description'
                 ref={this.descriptionElReft}
               />
-            </div>
-          </form>
+            </Form.Field>
+          </Form>
         </Modal.Content>
         <Modal.Actions>
-          <Button basic color='red' inverted>
+          <Button basic color='red' inverted onClick={this.modalCancel}>
             <Icon name='remove' /> Cancel
           </Button>
-          <Button color='green' inverted>
+          <Button color='green' inverted onClick={this.modalConfirm}>
             <Icon name='checkmark' /> Create
           </Button>
         </Modal.Actions>
