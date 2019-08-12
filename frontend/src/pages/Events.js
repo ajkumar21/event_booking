@@ -9,7 +9,8 @@ import {
   Header,
   Image,
   Menu,
-  Segment
+  Segment,
+  Modal
 } from 'semantic-ui-react';
 
 class EventsPage extends Component {
@@ -211,12 +212,52 @@ class EventsPage extends Component {
 
   render() {
     return (
-      <Button animated>
-        <Button.Content visible>Add Event</Button.Content>
-        <Button.Content hidden>
-          <Icon name='add circle' />
-        </Button.Content>
-      </Button>
+      <Modal
+        trigger={
+          <Button animated>
+            <Button.Content visible>Add Event</Button.Content>
+            <Button.Content hidden>
+              <Icon name='add circle' />
+            </Button.Content>
+          </Button>
+        }
+        basic
+        size='small'
+      >
+        <Header icon='archive' content='New Event' />
+        <Modal.Content>
+          <form>
+            <div className='form-control'>
+              <label htmlFor='title'>Title</label>
+              <input type='text' id='title' ref={this.titleElReft} />
+            </div>
+            <div className='form-control'>
+              <label htmlFor='price'>Price</label>
+              <input type='number' id='price' ref={this.priceElReft} />
+            </div>
+            <div className='form-control'>
+              <label htmlFor='date'>Date</label>
+              <input type='date' id='date' ref={this.dateElReft} />
+            </div>
+            <div className='form-control'>
+              <label htmlFor='description'>Description</label>
+              <textarea
+                rows='4'
+                id='description'
+                ref={this.descriptionElReft}
+              />
+            </div>
+          </form>
+        </Modal.Content>
+        <Modal.Actions>
+          <Button basic color='red' inverted>
+            <Icon name='remove' /> Cancel
+          </Button>
+          <Button color='green' inverted>
+            <Icon name='checkmark' /> Create
+          </Button>
+        </Modal.Actions>
+      </Modal>
     );
   }
 }

@@ -94,6 +94,9 @@ class App extends Component {
                     {!this.state.token && (
                       <Redirect from='/bookings' to='/auth' exact />
                     )}
+                    {!this.state.token && (
+                      <Redirect from='/events' to='/auth' exact />
+                    )}
 
                     {this.state.token && (
                       <Redirect from='/' to='/events' exact />
