@@ -1,10 +1,16 @@
 import React, { Component } from 'react';
-import '../index.css';
-import './Events.css';
-import Backdrop from '../components/backdrop/backdrop';
-import Modal from '../components/modal/modal';
 import AuthContext from '../context/auth-context';
-import EventList from '../components/events/eventList/eventList';
+import {
+  Button,
+  Icon,
+  Container,
+  Divider,
+  Grid,
+  Header,
+  Image,
+  Menu,
+  Segment
+} from 'semantic-ui-react';
 
 class EventsPage extends Component {
   state = {
@@ -205,90 +211,12 @@ class EventsPage extends Component {
 
   render() {
     return (
-      <React.Fragment>
-        {this.state.creating && <Backdrop />}
-        {this.state.creating && (
-          <Modal
-            title='Add Event'
-            canCancel
-            canConfirm
-            onCancel={this.modalCancel}
-            onConfirm={this.modalConfirm}
-            confirmText='Confirm'
-          >
-            <form>
-              <div className='form-control'>
-                <label htmlFor='title'>Title</label>
-                <input type='text' id='title' ref={this.titleElReft} />
-              </div>
-              <div className='form-control'>
-                <label htmlFor='price'>Price</label>
-                <input type='number' id='price' ref={this.priceElReft} />
-              </div>
-              <div className='form-control'>
-                <label htmlFor='date'>Date</label>
-                <input type='date' id='date' ref={this.dateElReft} />
-              </div>
-              <div className='form-control'>
-                <label htmlFor='description'>Description</label>
-                <textarea
-                  rows='4'
-                  id='description'
-                  ref={this.descriptionElReft}
-                />
-              </div>
-            </form>
-          </Modal>
-        )}
-
-        {this.state.selectedEvent && <Backdrop />}
-        {this.state.selectedEvent && (
-          <Modal
-            title={this.state.selectedEvent.title}
-            canCancel
-            canConfirm
-            onCancel={this.modalCancel}
-            onConfirm={this.bookEventHandler}
-            confirmText={this.context.token ? 'Book' : 'Confirm'}
-          >
-            <h1>{this.state.selectedEvent.title}</h1>
-            <h2>{this.state.selectedEvent.price}</h2>
-            <h2>
-              {new Date(this.state.selectedEvent.date).toLocaleDateString(
-                'de-DE'
-              )}
-            </h2>
-            <h3>{this.state.selectedEvent.description}</h3>
-          </Modal>
-        )}
-
-        {this.context.token && (
-          <div className='events-control'>
-            <p>Share your own events!</p>
-            <button className='btn' onClick={this.createEventHandler}>
-              Create Event
-            </button>
-          </div>
-        )}
-        {this.state.isLoading ? (
-          // https://loading.io/css
-
-          <div className='spinner'>
-            <div className='lds-ellipsis'>
-              <div />
-              <div />
-              <div />
-              <div />
-            </div>
-          </div>
-        ) : (
-          <EventList
-            events={this.state.events}
-            authUserId={this.context.userId}
-            onViewDetail={this.showDetailHandler}
-          />
-        )}
-      </React.Fragment>
+      <Button animated>
+        <Button.Content visible>Add Event</Button.Content>
+        <Button.Content hidden>
+          <Icon name='add circle' />
+        </Button.Content>
+      </Button>
     );
   }
 }

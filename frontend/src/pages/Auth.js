@@ -3,27 +3,38 @@ import './Auth.css';
 import AuthContext from '../context/auth-context';
 import '../index.css';
 
+import {
+  Button,
+  Form,
+  Grid,
+  Header,
+  Image,
+  Message,
+  Segment
+} from 'semantic-ui-react';
+
 class AuthPage extends Component {
   state = {
-    isLogin: true
+    isLogin: true,
+    email: '',
+    password: ''
   };
 
   static contextType = AuthContext;
 
   constructor(props) {
     super(props);
-    this.emailEl = React.createRef();
-    this.passwordEl = React.createRef();
   }
 
   submitHandler = e => {
     e.preventDefault();
-    const email = this.emailEl.current.value;
-    const password = this.passwordEl.current.value;
+    const email = this.state.email;
+    const password = this.state.password;
     if (email.trim().length === 0 || password.trim().length === 0) {
       return;
     }
 
+    console.log(email, password);
     let requestBody = {
       query: `query Login($email: String!, $password: String!) {login(email:$email, password:$password){userId token tokenExpiration}}`,
       variables: {
@@ -60,6 +71,7 @@ class AuthPage extends Component {
         return res.json();
       })
       .then(resData => {
+        console.log(resData);
         if (resData.data.login.token) {
           this.context.login(
             resData.data.login.token,
@@ -79,25 +91,53 @@ class AuthPage extends Component {
 
   render() {
     return (
-      <form className='auth-form' onSubmit={this.submitHandler}>
-        <div className='form-control'>
-          <label htmlFor='email'>E-mail</label>
-          <input type='email' id='email' ref={this.emailEl} />
-        </div>
-        <div className='form-control'>
-          <label htmlFor='password'>Password</label>
-          <input type='password' id='password' ref={this.passwordEl} />
-        </div>
+      <Grid
+        textAlign='center'
+        style={{ height: '100vh' }}
+        // verticalAlign='middle'
+      >
+        <Grid.Column style={{ maxWidth: 450 }}>
+          <Header as='h2' color='teal' textAlign='center'>
+            Log-in to your account
+          </Header>
+          <Form size='large' onSubmit={this.submitHandler}>
+            <Segment stacked>
+              <Form.Input
+                fluid
+                icon='user'
+                iconPosition='left'
+                placeholder='E-mail address'
+                onChange={e => {
+                  this.setState({ email: e.target.value });
+                }}
+              />
+              <Form.Input
+                fluid
+                icon='lock'
+                iconPosition='left'
+                placeholder='Password'
+                type='password'
+                onChange={e => {
+                  this.setState({ password: e.target.value });
+                }}
+              />
 
-        <div className='form-actions'>
-          <button type='submit'>
-            {this.state.isLogin ? 'Login' : 'Sign up'}
-          </button>
-          <button type='button' onClick={this.switchModeHandler}>
+              <Button color='teal' fluid size='large' type='submit'>
+                {this.state.isLogin ? 'Login' : 'Sign up'}
+              </Button>
+            </Segment>
+          </Form>
+          <br />
+          <Button
+            color='teal'
+            fluid
+            size='large'
+            onClick={this.switchModeHandler}
+          >
             Switch to {this.state.isLogin ? 'Sign Up' : 'Login'}
-          </button>
-        </div>
-      </form>
+          </Button>
+        </Grid.Column>
+      </Grid>
     );
   }
 }

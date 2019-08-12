@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
 
 import AuthContext from '../context/auth-context';
-import './booking.css';
-import BookingList from '../components/bookings/bookingList/bookingList';
 
 class BookingsPage extends Component {
   state = {
@@ -108,7 +106,7 @@ class BookingsPage extends Component {
   render() {
     return (
       <React.Fragment>
-        {this.state.isLoading ? (
+        {/* {this.state.isLoading ? (
           <div className='spinner'>
             <div className='lds-ellipsis'>
               <div />
@@ -122,7 +120,7 @@ class BookingsPage extends Component {
             bookings={this.state.bookings}
             onDelete={this.onDelete}
           />
-        )}
+        )} */}
       </React.Fragment>
     );
   }

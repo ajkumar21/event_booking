@@ -42,11 +42,13 @@ mongoose
   .connect(
     `mongodb+srv://${process.env.MONGO_USER}:${
       process.env.MONGO_PASSWORD
-    }@aj-dev-1-bpxcn.mongodb.net/${
+    }@cluster0-zei2j.gcp.mongodb.net/${
       process.env.MONGO_DB
-    }?retryWrites=true&w=majority`
+    }?retryWrites=true&w=majority`,
+    { useNewUrlParser: true }
   )
   .then(res => {
+    console.log('connected to mongoDB on port 8000');
     app.listen(8000);
   })
   .catch(err => console.log(err));
