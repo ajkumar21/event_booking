@@ -150,7 +150,7 @@ class EventsPage extends Component {
     });
   };
 
-  bookEventHandler = () => {
+  bookEventHandler = id => {
     if (!this.context.token) {
       this.setState({ selectedEvent: null });
       return;
@@ -158,7 +158,7 @@ class EventsPage extends Component {
     const requestBody = {
       query: `
       mutation {
-        bookEvent(eventId: "${this.state.selectedEvent._id}") {
+        bookEvent(eventId: "${id}") {
           _id
           createdAt
           updatedAt
@@ -199,15 +199,31 @@ class EventsPage extends Component {
   render() {
     return (
       <React.Fragment>
+        <div>
+          <Header as='h2' icon textAlign='center'>
+            <Icon name='calendar alternate' circular />
+            <Header.Content>Events</Header.Content>
+          </Header>
+          <br />
+        </div>
         {this.context.token && (
           <Modal
             trigger={
-              <Button animated onClick={() => this.setState({ open: true })}>
-                <Button.Content visible>Add Event</Button.Content>
-                <Button.Content hidden>
-                  <Icon name='add circle' />
-                </Button.Content>
-              </Button>
+              <React.Fragment>
+                <Button
+                  animated
+                  color='green'
+                  onClick={() => this.setState({ open: true })}
+                >
+                  <Button.Content visible>Add Event</Button.Content>
+                  <Button.Content hidden>
+                    <Icon name='add circle' />
+                  </Button.Content>
+                </Button>
+                <br />
+                <br />
+                <br />
+              </React.Fragment>
             }
             basic
             size='small'
@@ -257,25 +273,36 @@ class EventsPage extends Component {
             </Modal.Actions>
           </Modal>
         )}
-        {this.state.events.map(event => {
-          return (
-            <Card key={event._id}>
-              <Card.Content>
-                <Card.Header>{event.title}</Card.Header>
-                <Card.Meta>
-                  <span className='date'>
-                    {new Date(event.date).toLocaleDateString('de-DE')}
-                  </span>
-                </Card.Meta>
-                <Card.Description>{event.description}</Card.Description>
-              </Card.Content>
-              <Card.Content extra>
-                <Icon name='pound sign' />
-                {event.price}
-              </Card.Content>
-            </Card>
-          );
-        })}
+        <Card.Group itemsPerRow='2' stackable>
+          {this.state.events.map(event => {
+            return (
+              <Card key={event._id}>
+                <Card.Content>
+                  <Card.Header>{event.title}</Card.Header>
+                  <Card.Meta>
+                    <span className='date'>
+                      {new Date(event.date).toLocaleDateString('de-DE')}
+                    </span>
+                  </Card.Meta>
+                  <Card.Description>{event.description}</Card.Description>
+                </Card.Content>
+                <Card.Content extra>
+                  <Icon name='pound sign' />
+                  {event.price}
+                </Card.Content>
+                {this.context.token && (
+                  <Button
+                    color='green'
+                    inverted
+                    onClick={() => this.bookEventHandler(event._id)}
+                  >
+                    <Icon name='checkmark' /> Book
+                  </Button>
+                )}
+              </Card>
+            );
+          })}
+        </Card.Group>
       </React.Fragment>
     );
   }

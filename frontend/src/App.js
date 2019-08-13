@@ -42,17 +42,13 @@ class App extends Component {
           }}
         >
           <div>
-            <Button onClick={this.handleShowClick}>
-              <Icon name='angle double right' />
-            </Button>
             <Sidebar
               as={Menu}
-              animation='slide along'
               icon='labeled'
               inverted
               onHide={this.handleSidebarHide}
               vertical
-              visible={visible}
+              visible
               width='thin'
             >
               {!token && (
@@ -61,7 +57,7 @@ class App extends Component {
                   Sign In
                 </Menu.Item>
               )}
-              <Menu.Item as='a'>
+              <Menu.Item as={Link} to='/events'>
                 <Icon name='calendar alternate outline' />
                 Events
               </Menu.Item>

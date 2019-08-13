@@ -24,11 +24,14 @@ module.exports = {
     }
 
     try {
-      const booking = new Booking({
-        user: req.userId,
-        event: args.eventId
+      const user = req.userId;
+      const event = args.eventId;
+
+      const newBooking = new Booking({
+        user,
+        event
       });
-      const result = await booking.save();
+      const result = await newBooking.save();
       return transformBooking(result);
     } catch (err) {
       throw err;

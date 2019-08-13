@@ -1,13 +1,10 @@
 import React from 'react';
-import { Image, Item } from 'semantic-ui-react';
+import { Image, Item, Icon } from 'semantic-ui-react';
 
 const ItemExampleItems = () => (
   <Item.Group>
     <Item>
-      <Item.Image
-        size='tiny'
-        src='https://react.semantic-ui.com/images/wireframe/image.png'
-      />
+      <Icon name='bookmark' circular />
 
       <Item.Content>
         <Item.Header as='a'>Header</Item.Header>

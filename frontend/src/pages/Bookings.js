@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import BookingList from './components/bookingList';
+import { Button, Icon, Header, Modal, Form, Card } from 'semantic-ui-react';
 
 import AuthContext from '../context/auth-context';
 
@@ -13,7 +14,6 @@ class BookingsPage extends Component {
 
   componentDidMount() {
     this.fetchBookings();
-    console.log(this.context.token);
   }
 
   fetchBookings = () => {
@@ -28,6 +28,8 @@ class BookingsPage extends Component {
                _id
                title
                date
+               description
+               price
              }
             }
           }
@@ -51,6 +53,7 @@ class BookingsPage extends Component {
       .then(resData => {
         const bookings = resData.data.bookings;
         this.setState({ bookings: bookings, isLoading: false });
+        console.log(this.state.bookings);
       })
       .catch(err => {
         console.log(err);
@@ -108,6 +111,13 @@ class BookingsPage extends Component {
   render() {
     return (
       <React.Fragment>
+        <div>
+          <Header as='h2' icon textAlign='center'>
+            <Icon name='book' circular />
+            <Header.Content>Bookings</Header.Content>
+          </Header>
+          <br />
+        </div>
         {this.state.isLoading ? (
           <div className='spinner'>
             <div className='lds-ellipsis'>
@@ -118,12 +128,32 @@ class BookingsPage extends Component {
             </div>
           </div>
         ) : (
-          <BookingList
-          // bookings={this.state.bookings}
-          // onDelete={this.onDelete}
-          />
+          <Card.Group itemsPerRow='2' stackable>
+            {this.state.bookings.map(booking => {
+              return (
+                <Card key={booking._id}>
+                  <Card.Content>
+                    <Card.Header>{booking.event.title}</Card.Header>
+                    <Card.Meta>
+                      <span className='date'>
+                        {new Date(booking.event.date).toLocaleDateString(
+                          'de-DE'
+                        )}
+                      </span>
+                    </Card.Meta>
+                    <Card.Description>
+                      {booking.event.description}
+                    </Card.Description>
+                  </Card.Content>
+                  <Card.Content extra>
+                    <Icon name='pound sign' />
+                    {booking.event.price}
+                  </Card.Content>
+                </Card>
+              );
+            })}
+          </Card.Group>
         )}{' '}
-        }
       </React.Fragment>
     );
   }
