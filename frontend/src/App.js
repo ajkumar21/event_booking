@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { BrowserRouter, Route, Redirect, Switch } from 'react-router-dom';
+import { BrowserRouter, Route, Redirect, Switch, Link } from 'react-router-dom';
 import AuthPage from './pages/Auth';
 import EventsPage from './pages/Events';
 import BookingsPage from './pages/Bookings';
@@ -30,7 +30,7 @@ class App extends Component {
   };
 
   render() {
-    const { visible, token, logout } = this.state;
+    const { visible, token } = this.state;
     return (
       <BrowserRouter>
         <AuthContext.Provider
@@ -56,24 +56,24 @@ class App extends Component {
               width='thin'
             >
               {!token && (
-                <Menu.Item as='a' href='/auth'>
+                <Menu.Item as={Link} to='/auth'>
                   <Icon name='sign-in' />
                   Sign In
                 </Menu.Item>
               )}
-              <Menu.Item as='a' href='/events'>
+              <Menu.Item as='a'>
                 <Icon name='calendar alternate outline' />
                 Events
               </Menu.Item>
               {token && (
                 <React.Fragment>
-                  <Menu.Item as='a' href='/bookings'>
+                  <Menu.Item as={Link} to='/bookings'>
                     <Icon name='book' />
                     Bookings
                   </Menu.Item>
 
-                  <Menu.Item as='a'>
-                    <Icon name='sign-out' onClick={logout} />
+                  <Menu.Item as='a' onClick={this.logout}>
+                    <Icon name='sign-out' />
                     Logout
                   </Menu.Item>
                 </React.Fragment>

@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import BookingList from './components/bookingList';
 
 import AuthContext from '../context/auth-context';
 
@@ -12,6 +13,7 @@ class BookingsPage extends Component {
 
   componentDidMount() {
     this.fetchBookings();
+    console.log(this.context.token);
   }
 
   fetchBookings = () => {
@@ -106,7 +108,7 @@ class BookingsPage extends Component {
   render() {
     return (
       <React.Fragment>
-        {/* {this.state.isLoading ? (
+        {this.state.isLoading ? (
           <div className='spinner'>
             <div className='lds-ellipsis'>
               <div />
@@ -117,10 +119,11 @@ class BookingsPage extends Component {
           </div>
         ) : (
           <BookingList
-            bookings={this.state.bookings}
-            onDelete={this.onDelete}
+          // bookings={this.state.bookings}
+          // onDelete={this.onDelete}
           />
-        )} */}
+        )}{' '}
+        }
       </React.Fragment>
     );
   }

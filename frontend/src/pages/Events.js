@@ -199,62 +199,64 @@ class EventsPage extends Component {
   render() {
     return (
       <React.Fragment>
-        <Modal
-          trigger={
-            <Button animated onClick={() => this.setState({ open: true })}>
-              <Button.Content visible>Add Event</Button.Content>
-              <Button.Content hidden>
-                <Icon name='add circle' />
-              </Button.Content>
-            </Button>
-          }
-          basic
-          size='small'
-          open={this.state.open}
-        >
-          <Header icon='archive' content='New Event' />
-          <Modal.Content>
-            <Form>
-              <Form.Field>
-                <label htmlFor='title' style={{ color: 'white' }}>
-                  Title
-                </label>
-                <input ref={this.titleElReft} />
-              </Form.Field>
-              <Form.Field>
-                <label htmlFor='price' style={{ color: 'white' }}>
-                  Price
-                </label>
-                <input type='number' id='price' ref={this.priceElReft} />
-              </Form.Field>
+        {this.context.token && (
+          <Modal
+            trigger={
+              <Button animated onClick={() => this.setState({ open: true })}>
+                <Button.Content visible>Add Event</Button.Content>
+                <Button.Content hidden>
+                  <Icon name='add circle' />
+                </Button.Content>
+              </Button>
+            }
+            basic
+            size='small'
+            open={this.state.open}
+          >
+            <Header icon='archive' content='New Event' />
+            <Modal.Content>
+              <Form>
+                <Form.Field>
+                  <label htmlFor='title' style={{ color: 'white' }}>
+                    Title
+                  </label>
+                  <input ref={this.titleElReft} />
+                </Form.Field>
+                <Form.Field>
+                  <label htmlFor='price' style={{ color: 'white' }}>
+                    Price
+                  </label>
+                  <input type='number' id='price' ref={this.priceElReft} />
+                </Form.Field>
 
-              <Form.Field>
-                <label htmlFor='date' style={{ color: 'white' }}>
-                  Date
-                </label>
-                <input type='date' id='date' ref={this.dateElReft} />
-              </Form.Field>
-              <Form.Field>
-                <label htmlFor='description' style={{ color: 'white' }}>
-                  Description
-                </label>
-                <textarea
-                  rows='4'
-                  id='description'
-                  ref={this.descriptionElReft}
-                />
-              </Form.Field>
-            </Form>
-          </Modal.Content>
-          <Modal.Actions>
-            <Button basic color='red' inverted onClick={this.modalCancel}>
-              <Icon name='remove' /> Cancel
-            </Button>
-            <Button color='green' inverted onClick={this.modalConfirm}>
-              <Icon name='checkmark' /> Create
-            </Button>
-          </Modal.Actions>
-        </Modal>
+                <Form.Field>
+                  <label htmlFor='date' style={{ color: 'white' }}>
+                    Date
+                  </label>
+                  <input type='date' id='date' ref={this.dateElReft} />
+                </Form.Field>
+                <Form.Field>
+                  <label htmlFor='description' style={{ color: 'white' }}>
+                    Description
+                  </label>
+                  <textarea
+                    rows='4'
+                    id='description'
+                    ref={this.descriptionElReft}
+                  />
+                </Form.Field>
+              </Form>
+            </Modal.Content>
+            <Modal.Actions>
+              <Button basic color='red' inverted onClick={this.modalCancel}>
+                <Icon name='remove' /> Cancel
+              </Button>
+              <Button color='green' inverted onClick={this.modalConfirm}>
+                <Icon name='checkmark' /> Create
+              </Button>
+            </Modal.Actions>
+          </Modal>
+        )}
         {this.state.events.map(event => {
           return (
             <Card key={event._id}>
