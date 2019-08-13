@@ -8,11 +8,15 @@ import AuthContext from './context/auth-context';
 import { Button, Icon, Menu, Segment, Sidebar } from 'semantic-ui-react';
 
 class App extends Component {
-  state = {
-    token: null,
-    userId: null,
-    visible: false
-  };
+  constructor(props) {
+    super(props);
+    this.state = {
+      token: null,
+      userId: null,
+      visible: false
+    };
+  }
+
   handleHideClick = () => this.setState({ visible: false });
   handleShowClick = () => this.setState({ visible: true });
   handleSidebarHide = () => this.setState({ visible: false });
@@ -52,18 +56,18 @@ class App extends Component {
               width='thin'
             >
               {!token && (
-                <Menu.Item as='a'>
+                <Menu.Item as='a' href='/auth'>
                   <Icon name='sign-in' />
                   Sign In
                 </Menu.Item>
               )}
-              <Menu.Item as='a'>
+              <Menu.Item as='a' href='/events'>
                 <Icon name='calendar alternate outline' />
                 Events
               </Menu.Item>
               {token && (
                 <React.Fragment>
-                  <Menu.Item as='a'>
+                  <Menu.Item as='a' href='/bookings'>
                     <Icon name='book' />
                     Bookings
                   </Menu.Item>
@@ -85,9 +89,6 @@ class App extends Component {
                     )}
                     {!this.state.token && (
                       <Redirect from='/bookings' to='/auth' exact />
-                    )}
-                    {!this.state.token && (
-                      <Redirect from='/events' to='/auth' exact />
                     )}
 
                     {this.state.token && (

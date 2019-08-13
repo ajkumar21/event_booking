@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import AuthContext from '../context/auth-context';
 import { Button, Icon, Header, Modal, Form, Card } from 'semantic-ui-react';
-
 class EventsPage extends Component {
   isActive = true;
 
@@ -41,7 +40,6 @@ class EventsPage extends Component {
     // adding + to variable name makes it a number
     const date = this.dateElReft.current.value;
     const description = this.descriptionElReft.current.value;
-    console.log(title + price + date + description);
     if (
       title.trim().length === 0 ||
       price <= 0 ||
@@ -127,7 +125,6 @@ class EventsPage extends Component {
     })
       .then(res => {
         if (res.status !== 200 && res.status !== 201) {
-          console.log(res);
           throw new Error('Failed');
         }
         return res.json();
@@ -260,23 +257,21 @@ class EventsPage extends Component {
         </Modal>
         {this.state.events.map(event => {
           return (
-            <React.Fragment key={event.id}>
-              <Card>
-                <Card.Content>
-                  <Card.Header>{event.title}</Card.Header>
-                  <Card.Meta>
-                    <span className='date'>{event.date}</span>
-                  </Card.Meta>
-                  <Card.Description>{event.description}</Card.Description>
-                </Card.Content>
-                <Card.Content extra>
-                  <a>
-                    <Icon name='pound sign' />
-                    {event.price}
-                  </a>
-                </Card.Content>
-              </Card>
-            </React.Fragment>
+            <Card key={event._id}>
+              <Card.Content>
+                <Card.Header>{event.title}</Card.Header>
+                <Card.Meta>
+                  <span className='date'>
+                    {new Date(event.date).toLocaleDateString('de-DE')}
+                  </span>
+                </Card.Meta>
+                <Card.Description>{event.description}</Card.Description>
+              </Card.Content>
+              <Card.Content extra>
+                <Icon name='pound sign' />
+                {event.price}
+              </Card.Content>
+            </Card>
           );
         })}
       </React.Fragment>

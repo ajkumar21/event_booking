@@ -25,7 +25,6 @@ class AuthPage extends Component {
       return;
     }
 
-    console.log(email, password);
     let requestBody = {
       query: `query Login($email: String!, $password: String!) {login(email:$email, password:$password){userId token tokenExpiration}}`,
       variables: {
@@ -62,7 +61,6 @@ class AuthPage extends Component {
         return res.json();
       })
       .then(resData => {
-        console.log(resData);
         if (resData.data.login.token) {
           this.context.login(
             resData.data.login.token,
