@@ -5,15 +5,7 @@ import EventsPage from './pages/Events';
 import BookingsPage from './pages/Bookings';
 import AuthContext from './context/auth-context';
 
-import {
-  Button,
-  Header,
-  Icon,
-  Image,
-  Menu,
-  Segment,
-  Sidebar
-} from 'semantic-ui-react';
+import { Button, Icon, Menu, Segment, Sidebar } from 'semantic-ui-react';
 
 class App extends Component {
   state = {

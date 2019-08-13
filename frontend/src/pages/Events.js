@@ -1,30 +1,8 @@
 import React, { Component } from 'react';
 import AuthContext from '../context/auth-context';
-import {
-  Button,
-  Icon,
-  Container,
-  Divider,
-  Grid,
-  Header,
-  Image,
-  Menu,
-  Segment,
-  Modal,
-  Label,
-  Input,
-  Form
-} from 'semantic-ui-react';
+import { Button, Icon, Header, Modal, Form, Card } from 'semantic-ui-react';
 
 class EventsPage extends Component {
-  state = {
-    creating: false,
-    events: [],
-    isLoading: false,
-    selectedEvent: null,
-    open: false
-  };
-
   isActive = true;
 
   constructor(props) {
@@ -33,6 +11,13 @@ class EventsPage extends Component {
     this.priceElReft = React.createRef();
     this.dateElReft = React.createRef();
     this.descriptionElReft = React.createRef();
+    this.state = {
+      creating: false,
+      events: [],
+      isLoading: false,
+      selectedEvent: null,
+      open: false
+    };
   }
   componentDidMount() {
     this.fetchEvents();
@@ -216,62 +201,85 @@ class EventsPage extends Component {
 
   render() {
     return (
-      <Modal
-        trigger={
-          <Button animated onClick={() => this.setState({ open: true })}>
-            <Button.Content visible>Add Event</Button.Content>
-            <Button.Content hidden>
-              <Icon name='add circle' />
-            </Button.Content>
-          </Button>
-        }
-        basic
-        size='small'
-        open={this.state.open}
-      >
-        <Header icon='archive' content='New Event' />
-        <Modal.Content>
-          <Form>
-            <Form.Field>
-              <label htmlFor='title' style={{ color: 'white' }}>
-                Title
-              </label>
-              <input ref={this.titleElReft} />
-            </Form.Field>
-            <Form.Field>
-              <label htmlFor='price' style={{ color: 'white' }}>
-                Price
-              </label>
-              <input type='number' id='price' ref={this.priceElReft} />
-            </Form.Field>
+      <React.Fragment>
+        <Modal
+          trigger={
+            <Button animated onClick={() => this.setState({ open: true })}>
+              <Button.Content visible>Add Event</Button.Content>
+              <Button.Content hidden>
+                <Icon name='add circle' />
+              </Button.Content>
+            </Button>
+          }
+          basic
+          size='small'
+          open={this.state.open}
+        >
+          <Header icon='archive' content='New Event' />
+          <Modal.Content>
+            <Form>
+              <Form.Field>
+                <label htmlFor='title' style={{ color: 'white' }}>
+                  Title
+                </label>
+                <input ref={this.titleElReft} />
+              </Form.Field>
+              <Form.Field>
+                <label htmlFor='price' style={{ color: 'white' }}>
+                  Price
+                </label>
+                <input type='number' id='price' ref={this.priceElReft} />
+              </Form.Field>
 
-            <Form.Field>
-              <label htmlFor='date' style={{ color: 'white' }}>
-                Date
-              </label>
-              <input type='date' id='date' ref={this.dateElReft} />
-            </Form.Field>
-            <Form.Field>
-              <label htmlFor='description' style={{ color: 'white' }}>
-                Description
-              </label>
-              <textarea
-                rows='4'
-                id='description'
-                ref={this.descriptionElReft}
-              />
-            </Form.Field>
-          </Form>
-        </Modal.Content>
-        <Modal.Actions>
-          <Button basic color='red' inverted onClick={this.modalCancel}>
-            <Icon name='remove' /> Cancel
-          </Button>
-          <Button color='green' inverted onClick={this.modalConfirm}>
-            <Icon name='checkmark' /> Create
-          </Button>
-        </Modal.Actions>
-      </Modal>
+              <Form.Field>
+                <label htmlFor='date' style={{ color: 'white' }}>
+                  Date
+                </label>
+                <input type='date' id='date' ref={this.dateElReft} />
+              </Form.Field>
+              <Form.Field>
+                <label htmlFor='description' style={{ color: 'white' }}>
+                  Description
+                </label>
+                <textarea
+                  rows='4'
+                  id='description'
+                  ref={this.descriptionElReft}
+                />
+              </Form.Field>
+            </Form>
+          </Modal.Content>
+          <Modal.Actions>
+            <Button basic color='red' inverted onClick={this.modalCancel}>
+              <Icon name='remove' /> Cancel
+            </Button>
+            <Button color='green' inverted onClick={this.modalConfirm}>
+              <Icon name='checkmark' /> Create
+            </Button>
+          </Modal.Actions>
+        </Modal>
+        {this.state.events.map(event => {
+          return (
+            <React.Fragment key={event.id}>
+              <Card>
+                <Card.Content>
+                  <Card.Header>{event.title}</Card.Header>
+                  <Card.Meta>
+                    <span className='date'>{event.date}</span>
+                  </Card.Meta>
+                  <Card.Description>{event.description}</Card.Description>
+                </Card.Content>
+                <Card.Content extra>
+                  <a>
+                    <Icon name='pound sign' />
+                    {event.price}
+                  </a>
+                </Card.Content>
+              </Card>
+            </React.Fragment>
+          );
+        })}
+      </React.Fragment>
     );
   }
 }

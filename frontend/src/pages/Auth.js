@@ -3,27 +3,18 @@ import './Auth.css';
 import AuthContext from '../context/auth-context';
 import '../index.css';
 
-import {
-  Button,
-  Form,
-  Grid,
-  Header,
-  Image,
-  Message,
-  Segment
-} from 'semantic-ui-react';
+import { Button, Form, Grid, Header, Segment } from 'semantic-ui-react';
 
 class AuthPage extends Component {
-  state = {
-    isLogin: true,
-    email: '',
-    password: ''
-  };
-
   static contextType = AuthContext;
 
   constructor(props) {
     super(props);
+    this.state = {
+      isLogin: true,
+      email: '',
+      password: ''
+    };
   }
 
   submitHandler = e => {
